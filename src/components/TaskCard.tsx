@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Task } from "@/lib/mockTasks";
 import { CheckIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import {
@@ -10,15 +9,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Task } from "@/types"; // เปลี่ยนจาก mockTasks เป็น types
 
 type Props = {
-  task: Task
-  onToggleDone?: (id: string) => void
-  onEdit?: (task: Task) => void
-  onDelete?: (id: string) => void
-}
+  task: Task;
+  onToggleDone: (id: string, is_done: boolean) => void;
+  onEdit?: (task: Task) => void;
+  onDelete?: (id: string) => void;
+};
 
-export default function TaskCard({ task, onToggleDone, onEdit, onDelete }: Props) {
+export default function TaskCard({
+  task,
+  onToggleDone,
+  onEdit,
+  onDelete,
+}: Props) {
   const [open, setOpen] = useState(false);
 
   const getBgColor = () => {
@@ -32,10 +37,6 @@ export default function TaskCard({ task, onToggleDone, onEdit, onDelete }: Props
     : task.priority === "high"
     ? "HIGH PRIORITY"
     : "NORMAL PRIORITY";
-
-  const truncate = (text: string, maxLength: number) => {
-    return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
-  };
 
   return (
     <>
@@ -58,11 +59,9 @@ export default function TaskCard({ task, onToggleDone, onEdit, onDelete }: Props
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onToggleDone?.(task.id);
+            onToggleDone?.(task.id, task.is_done);
           }}
-          className={`w-6 h-6 shrink-0 rounded-full border-2 border-white flex items-center justify-center transition-all duration-200 ${
-            task.is_done ? "bg-white text-green-500" : ""
-          }`}
+          className={`w-6 h-6 shrink-0 rounded-full border-2 border-white flex items-center justify-center transition-all duration-200 bg-white text-green-500 cursor-pointer`}
         >
           {task.is_done && <CheckIcon size={14} />}
         </button>
